@@ -1,26 +1,28 @@
-# Use Maven + OpenJDK for building the app
-FROM maven:3.9.1-openjdk-17 AS build
+# Stage 1: Build the app using Maven + OpenJDK 24
+FROM maven:3.9.0-openjdk-24 AS build
 
-# Set working directory
 WORKDIR /app
 
-# Copy the project files
+# Copy pom.xml first for caching dependencies
 COPY pom.xml .
+RUN mvn dependency:go-offline
+
+# Copy source code
 COPY src ./src
 
-# Build the app and package as a jar
-RUN mvn clean package -DskipTests
+# Build the jar (skip tests to speed up)
+RUN mvn package -DskipTests
 
-# Use a lightweight OpenJDK image to run the app
-FROM openjdk:17-jdk-slim
+# Stage 2: Run the app
+FROM eclipse-temurin:24-jre
 
 WORKDIR /app
 
 # Copy the jar from the build stage
-COPY --from=build /app/target/TipApp.jar ./TipApp.jar
+COPY --from=build /app/target/*.jar ./app.jar
 
-# Expose port if your app uses one (optional)
+# Expose the port your app uses
 EXPOSE 8080
 
 # Run the app
-ENTRYPOINT ["java", "-jar", "TipApp.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
