@@ -1,27 +1,34 @@
-# Stage 1: Build the app using Maven + OpenJDK 24
-FROM maven:3.9.0-openjdk-24 AS build
+# Stage 1: Build with JDK 24 and Maven
+FROM eclipse-temurin:24-jdk AS build
 
 WORKDIR /app
 
-# Copy pom.xml first for caching dependencies
+# Install Maven
+RUN apt-get update && \
+    apt-get install -y maven && \
+    rm -rf /var/lib/apt/lists/*
+
+# Copy pom.xml first for dependency caching
 COPY pom.xml .
+
+# Download dependencies only (optional, speeds up rebuilds)
 RUN mvn dependency:go-offline
 
-# Copy source code
+# Copy the source code
 COPY src ./src
 
-# Build the jar (skip tests to speed up)
+# Build the app (skip tests to avoid issues)
 RUN mvn package -DskipTests
 
-# Stage 2: Run the app
+# Stage 2: Run the app with just JRE
 FROM eclipse-temurin:24-jre
 
 WORKDIR /app
 
-# Copy the jar from the build stage
+# Copy the built jar from build stage
 COPY --from=build /app/target/*.jar ./app.jar
 
-# Expose the port your app uses
+# Expose port (use your app port, default 8080)
 EXPOSE 8080
 
 # Run the app
