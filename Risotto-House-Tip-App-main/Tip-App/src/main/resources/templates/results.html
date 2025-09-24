@@ -7,25 +7,103 @@
           rel="stylesheet">
     <style>
         body {
-            background-color: #ffe5b4;
+            background-color: #ffd8a5;
+            min-height: 100vh;
+            color: #2c2c2c;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
         }
+
+        .container {
+            padding: 2rem 1rem;
+        }
+
         .card {
-            background-color: rgba(255, 255, 255, 0.95);
-            border-radius: 12px;
+            background: #fffaf3;
+            border: 1px solid #d4c9b9;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            padding: 2rem;
+        }
+
+        h1 {
+            color: #800020;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 1rem;
+            font-size: 2rem;
+        }
+
+        p {
+            font-size: 1.1rem;
+            text-align: center;
+        }
+
+        table {
+            margin-top: 1rem;
+        }
+
+        .table thead th {
+            background-color: #800020;
+            color: white;
+            font-weight: bold;
+        }
+
+        .table tbody td {
+            font-size: 1rem;
+        }
+
+        .table tfoot th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+
+        .btn-primary {
+            background: #006400;
+            border: 2px solid #004d00;
+            border-radius: 25px;
+            padding: 0.8rem 1rem;
+            font-weight: bold;
+            font-size: 1rem;
+            color: white;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary:hover {
+            background: #008000;
+            border-color: #006400;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 100, 0, 0.4);
+        }
+
+        @media (max-width: 576px) {
+            .card {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+
+            h1 {
+                font-size: 1.6rem;
+            }
+
+            table {
+                font-size: 0.9rem;
+            }
         }
     </style>
 </head>
 <body>
 <div class="container min-vh-100 d-flex justify-content-center align-items-center">
-    <div class="card shadow-lg p-4 w-100" style="max-width: 600px;">
-        <h1 class="text-center mb-4">Tip Distribution Results</h1>
+    <div class="card shadow-lg w-100" style="max-width: 600px;">
+        <h1>Tip Distribution Results</h1>
 
-        <p class="text-center fs-5">Total Tip Pool:
+        <p>Total Tip Pool:
             <strong>$<span th:text="${tipPool}"></span></strong>
         </p>
 
         <table class="table table-striped table-bordered table-hover text-center">
-            <thead class="table-dark">
+            <thead>
             <tr>
                 <th>Role</th>
                 <th>Count</th>
@@ -37,7 +115,7 @@
             <tr>
                 <td>Waiter</td>
                 <td th:text="${waiters}"></td>
-                <td th:text="${waiterShare}" style="background-color: #fff8dc;"></td> <!-- light gold -->
+                <td th:text="${waiterShare}" style="background-color: #fff8dc;"></td>
                 <td th:text="${waiterTotal}"></td>
             </tr>
             <tr>
@@ -53,20 +131,20 @@
                 <td th:text="${busboyTotal}"></td>
             </tr>
             </tbody>
-            <tfoot class="table-light">
+            <tfoot>
             <tr>
                 <th colspan="3">Grand Total</th>
                 <th th:text="${tipPool}"></th>
             </tr>
             </tfoot>
         </table>
-        <div class="text-center mt-3">
+
+        <div class="text-center mt-4">
             <a href="/calculator" class="btn btn-primary">Back to Calculator</a>
         </div>
     </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 </body>
 </html>
